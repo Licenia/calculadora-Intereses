@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>calculadora Intereses</title>
+</head>
+<body>
+    <label for="">Monto</label>
+    <input type="number" id="monto">
+    
+    <label for=""> Tasa de interes %</label>
+    <input type="number" id="tasaInteres">
+    
+    <label for="">tiempo (años)</label>
+    <input type="number" id="tiempo">
+
+    <button id="calcularIntereses">Calcular</button>
+
+    <p id="resultado"></p>
+
+    <script>
+        document.getElementById("calcularIntereses").addEventListener("click", function() {
+            
+            
+            // validaciones
+            let validacion = (valor, nombre) => {
+                if(!valor) return `${nombre} no puede estar vacio`
+                if(isNaN(valor)) return `${nombre} no es un numero`
+                if(valor < 1) return `${nombre} no puede ser un numero negativo!`
+                return null;
+            }
+            let monto = parseFloat(document.getElementById("monto").value);
+            let tasaInteres = parseFloat(document.getElementById("tasaInteres").value)/100;
+            let tiempo = parseFloat(document.getElementById("tiempo").value);
+
+            try {
+                let err = validacion(monto, "Monto") || validacion(tasaInteres, " Tasa de interes") || validacion(tiempo, "Tiempo (años)")
+            
+                if (err) throw new Error(err);
+
+                let total = monto *(1+(tasaInteres *tiempo));
+                document.getElementById("resultado").innerText = "Total: $" +total.toFixed(2);
+            
+            } catch (error) {
+            
+                document.getElementById("resultado").innerText = error.message;
+            }
+
+            
+        })
+
+    </script>
+</body>
+</html>
