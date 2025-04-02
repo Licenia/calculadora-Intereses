@@ -1,72 +1,97 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>calculadora Intereses</title>
-</head>
-<body>
-    <label for="">Quiero calcular</label>
-    <select  id="tipoInteres">
-        <option value="simple">Interes Simple</option>
-        <option value="compuesto">Interes Compuesto</option>
-    </select>
-    <label for="">Monto</label>
-    <input type="number" id="monto">
-    
-    <label for=""> Tasa de interes %</label>
-    <input type="number" id="tasaInteres">
-    
-    <label for="">tiempo (años)</label>
-    <input type="number" id="tiempo">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="Pixel Art.svg" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <title>Calculadora de Intereses</title>
+  </head>
+  <body>
+    <section class="content">
+      <form class="ctn" id="formulario">
+        <label for="">Quiero calcular</label>
+        <select id="tipoInteres">
+          <option value="simple">Interes Simple</option>
+          <option value="compuesto">Interes Compuesto</option>
+        </select>
+        <label for="">Monto</label>
+        <input type="number" id="monto" />
 
-    <button id="calcularIntereses">Calcular</button>
+        <label for=""> Tasa de interes %</label>
+        <input type="number" id="tasaInteres" />
 
-    <p id="resultado"></p>
+        <label for="">tiempo (años)</label>
+        <input type="number" id="tiempo" />
+        <div class="btn">
+          <button type="button" id="calcularIntereses">Calcular</button>
+          <button type="button" id="limpiar">Limpiar</button>
+        </div>
+        <p id="er"></p>
+        <p id="resultado"></p>
+      </form>
+    </section>
 
     <script>
+      document
+        .getElementById("calcularIntereses")
+        .addEventListener("click", function () {
+          // validaciones
+          let validacion = (valor, nombre) => {
+            if (!valor) return `${nombre} no puede estar vacio`;
+            if (isNaN(valor)) return `${nombre} no es un numero`;
+            if (valor <= 0) return `${nombre} no puede ser un numero negativo!`;
+            return null;
+          };
 
+          let tipoInteres = document.getElementById("tipoInteres").value;
+          let monto = parseFloat(document.getElementById("monto").value);
+          let tasaInteres =
+            parseFloat(document.getElementById("tasaInteres").value) / 100;
+          let tiempo = parseFloat(document.getElementById("tiempo").value);
 
-        document.getElementById("calcularIntereses").addEventListener("click", function() {
-            
-            
-            // validaciones
-            let validacion = (valor, nombre) => {
-                if(!valor) return `${nombre} no puede estar vacio`
-                if(isNaN(valor)) return `${nombre} no es un numero`
-                if(valor <= 0) return `${nombre} no puede ser un numero negativo!`
-                return null;
+          try {
+            let err =
+              validacion(monto, "Monto") ||
+              validacion(tasaInteres, " Tasa de interes") ||
+              validacion(tiempo, "Tiempo (años)");
+
+            if (err) throw new Error(err);
+
+            let total;
+            if (tipoInteres === "simple") {
+              total = monto * (1 + tasaInteres * tiempo);
+              document.getElementById("resultado").innerText =
+                "Total: $" + total.toFixed(2);
+            } else {
+              let n = 1;
+              total = monto * Math.pow(1 + tasaInteres / n, n * tiempo);
+              document.getElementById("resultado").innerText =
+                "Total: $" + total.toFixed(2);
             }
 
-            let tipoInteres = document.getElementById("tipoInteres").value;
-            let monto = parseFloat(document.getElementById("monto").value);
-            let tasaInteres = parseFloat(document.getElementById("tasaInteres").value)/100;
-            let tiempo = parseFloat(document.getElementById("tiempo").value);
+            document.getElementById("resultado").style.display = "block";
+            document.getElementById("er").style.display = "none";
+          } catch (error) {
+            document.getElementById("er").innerText = error.message;
 
-            try {
-                
+            document.getElementById("resultado").style.display = "none";
+            document.getElementById("er").style.display = "block";
+          }
+        });
 
-                let err = validacion(monto, "Monto") || validacion(tasaInteres, " Tasa de interes") || validacion(tiempo, "Tiempo (años)")
-            
-                if (err) throw new Error(err);
+      document.getElementById("limpiar").addEventListener("click", function () {
+        document.getElementById("formulario").reset();
 
-                let total;
-                if (tipoInteres === "simple") {
-                    total = monto *(1+(tasaInteres *tiempo));
-                    document.getElementById("resultado").innerText = "Total: $" +total.toFixed(2);   
-                } else {
-                    let n = 1;
-                    total= monto * Math.pow( 1 + (tasaInteres / n), n * tiempo);
-                    document.getElementById("resultado").innerText = "Total: $" +total.toFixed(2);   
-                }
-            } catch (error) {
-            
-                document.getElementById("resultado").innerText = error.message;
-            }
-
-            
-        })
-
+        document.getElementById("er").style.display = "none";
+        document.getElementById("resultado").style.display = "none";
+      });
     </script>
-</body>
+  </body>
 </html>
